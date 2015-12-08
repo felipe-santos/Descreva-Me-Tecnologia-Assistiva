@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title>Test WebCam</title>
+<script src="static/jquery.min.js"></script>
+<style>
+</style>
+</head>
+<body>
+<h1>Test WebCam - Python + Tornado + OpenCV + JQuery</h1>
+
+<div>
+    <img id="cam_image" src="img"/>
+    <button name="a" id="b" value="AA">Clique</button>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var ws;
+        $("#cam_image").load(function() {
+            $(this).attr('src', 'img?time='+(new Date().getTime()));
+        });
+
+  	ws = new WebSocket("ws://127.0.0.1:8001/ws");
+	// Handle incoming websocket message callback
+	ws.onmessage = function(evt) {
+            alert(evt.data);
+            var json = JSON.parse(evt.data);
+            if(json.DADO_mm!==undefined){
+                $('#valor_deslocamento').html(json.DADO_mm+"<small>&nbsp;mm</small>");
+            }
+
+	};
+	// Close Websocket callback
+	ws.onclose = function(evt) {
+	    alert("Connection close");
+	};
+  	$("#b").click(function(evt) {
+	    ws.send("AA")
+        });
+    });
+</script>
+</body>
+</html>

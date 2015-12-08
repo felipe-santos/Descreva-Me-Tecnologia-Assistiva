@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<link href="{{ static_url("painel/bootstrap.min.css") }}" rel="stylesheet" type="text/css">
+		<link href="{{ static_url("painel/londinium-theme.css") }}" rel="stylesheet" type="text/css">
+		<link href="{{ static_url("painel/styles.css") }}" rel="stylesheet" type="text/css">
+		<link href="{{ static_url("painel/icons.css") }}" rel="stylesheet" type="text/css">
+		
+		
+		<script type="text/javascript" src="{{ static_url("painel/js/jquery.min.js") }}"></script>
+		<script type="text/javascript" src="{{ static_url("painel/js/jquery-ui.min.js") }}"></script>
+		<script type="text/javascript" src="{{ static_url("chat.js") }}"></script>
+  </head>
+  <body>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h6 id="detalhes-do-video" style="font-size: 20px; text-align: center; float: none" class="panel-title"><i class="icon-screen2"></i> DESCREVA-ME</h6>
+	</div>
+	<div class="panel-body">
+		<!-- Spinners -->
+		<div class="col-md-6" style="padding: 0 2px;">
+         <div class="panel panel-default">
+				<div class="panel-heading">
+            	<h6 class="panel-title">Detalhes do Vídeo: </h6>
+
+            </div>
+            <div class="panel-body" style="padding: 2px 15px;">
+					<div class="row">
+
+						<img id="cam_image" src="img" style="width: 100%" />
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6" style="padding: 0 2px;">
+			<!-- Animated graph 3 -->
+			<div class="panel-body" style="min-height: 310px; padding: 0;">
+				<div class="panel-body" style="padding: 0;">
+					<button>VIRAR ESQUERDA</button>
+					<button>VIRAR DIREITA</button>
+					<button>APROXIMAR</button>
+					<button>GIRAR</button>
+					<button>OUTRO LADO</button>
+				<div>
+				<div class="panel-body" style="padding: 0;">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h6 class="panel-title"><i class="icon-calendar2"></i> CHAT</h6>
+						</div>
+						<!--<div class="well" id="titulopasso">
+                     <p style="color: yellow">Fusce dapibus, tellus ac cursus commodo, tortor mauris nibh.</p>
+                  </div>-->
+						<div class="well" id="passoapasso" >
+							<div id="input">
+					        <form action="/a/message/new" method="post" id="messageform">
+					          <table>
+					            <tr>
+					              <td><input name="body" id="message" ></td>
+					              <td style="padding-left:5px">
+					                <input type="submit" value="{{ _("ENVIAR") }}">
+					                <input type="hidden" name="next" value="{{ request.path }}">
+					                {% module xsrf_form_html() %}
+					              </td>
+					            </tr>
+					          </table>
+					        </form>
+					      </div>
+					      <div id="inbox" style="margin-top: 10px; font-size: 13px; font-weight: bold; color: blue;">
+                    		<!--<p style="color: yellow">Fusce dapibus, tellus ac cursus commodo, tortor mauris nibh.</p>-->
+                    		{% for message in messages %}
+				          		{% include "message.html" %}
+				        		{% end %}
+				        	</div>
+                  </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /spinners -->
+
+	</div>
+</div>
+	<script>
+        $(document).ready(function () {
+            $("#cam_image").load(function() {
+                $(this).attr('src', 'img?time='+(new Date().getTime()));
+            });
+            var ws;
+            ws = new WebSocket("ws://192.168.1.46:8888/chatsocket");
+            ws.onmessage = function(evt) {
+                //alert(evt.data);
+                var json = JSON.parse(evt.data);
+                if(json.desejo!==undefined){
+                    $('#detalhes-do-video').html("<i class=\"icon-screen2\"></i> DESCREVA-ME: "+json.desejo);
+                }
+	         };
+	         // Close Websocket callback
+	         ws.onclose = function(evt) {
+	              alert("Connection close");
+	         };
+            $("#opcao1").click(function(evt) {
+      		ws.send('{ "id":"111111", "body": "BOTAO1"} ');
+            });
+            $("#opcao2").click(function(evt) {
+      		ws.send('{ "id":"222222", "body": "BOTAO2"} ');
+            });
+        });
+    </script>
+  </body>
+</html>
+
