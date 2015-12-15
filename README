@@ -2,3 +2,5 @@ Aplicativo escrito em python para promover as tecnologias assistivas auxiliando 
 
 Este aplicativo é um protótipo, aceito contribuição.
 O projeto será aberto para todos.
+
+O aplicativo consiste em transmissão em tempo real de vídeo pela internet através do navegador, contém um chat para envio de mensagens e um conversor texto para voz para ajudar o deficiente visual a identificar objetos, datas, etc.
